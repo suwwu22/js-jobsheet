@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Explorer - Bagian 17-19</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: 40px auto; }
+    .product-card { border: 1px solid #ccc; padding: 12px; margin-bottom: 8px; border-radius: 6px; }
+    .product-card h3 { margin: 0 0 4px; }
+    #controls { margin-bottom: 16px; display: flex; gap: 8px; }
+  </style>
+</head>
+<body>
+  <h2>Product Explorer</h2>
+
+  <!-- Bagian 19: Event Handling -->
+  <div id="controls">
+    <input type="text" id="search-input" placeholder="Cari produk...">
+    <select id="category-select">
+      <option value="all">Semua Kategori</option>
+      <option value="laptops">Laptop</option>
+      <option value="phones">Phone</option>
+      <option value="audio">Audio</option>
+      <option value="tablets">Tablet</option>
+    </select>
+    <select id="sort-select">
+      <option value="default">Default</option>
+      <option value="price-asc">Harga Termurah</option>
+      <option value="price-desc">Harga Termahal</option>
+      <option value="rating">Rating Tertinggi</option>
+    </select>
+  </div>
+
+  <!-- Bagian 17: DOM target -->
+  <div id="product-list"></div>
+
+  <script>
+    // BAGIAN 17 — DOM MANIPULATION
+
+    const dummyProducts = [
+      { id: 1, title: "Laptop Pro 14", category: "laptops", price: 1200, rating: 4.5 },
+      { id: 2, title: "Smartphone X", category: "phones", price: 800, rating: 4.2 },
+      { id: 3, title: "Wireless Headphones", category: "audio", price: 100, rating: 4.0 },
+      { id: 4, title: "Tablet 10 inch", category: "tablets", price: 400, rating: 4.3 },
+      { id: 5, title: "Gaming Laptop 16", category: "laptops", price: 1800, rating: 4.7 }
+    ];
+
+    function renderProducts(products) {
+      const container = document.querySelector("#product-list");
+      container.innerHTML = "";
+
+      if (products.length === 0) {
+        container.innerHTML = "<p>Tidak ada produk ditemukan.</p>";
+        return;
+      }
+
+      for (const product of products) {
+        const card = document.createElement("div");
+        card.classList.add("product-card");
+        card.innerHTML = `
+          <h3>${product.title}</h3>
+          <p>${product.category}</p>
+          <p>Harga: $${product.price}</p>
+          <p>Rating: ${product.rating}</p>
+        `;
+        container.append(card);
+      }
+    }
+
+    // BAGIAN 18 — STATE MANAGEMENT
+
+    const state = {
+      products: dummyProducts,
+      search: "",
+      category: "all",
+      sortBy: "default",
+      favorites: [],
+      status: "idle" // idle, loading, success, error, empty
+    };
+
+    function render() {
+      let result = state.products;
+
+      if (state.search) {
+        result = result.filter(p =>
+          p.title.toLowerCase().includes(state.search.toLowerCase())
+        );
+      }
+
+      if (state.category !== "all") {
+        result = result.filter(p => p.category === state.category);
+      }
+
+      if (state.sortBy === "price-asc") {
+        result = [...result].sort((a, b) => a.price - b.price);
+      } else if (state.sortBy === "price-desc") {
+        result = [...result].sort((a, b) => b.price - a.price);
+      } else if (state.sortBy === "rating") {
+        result = [...result].sort((a, b) => b.rating - a.rating);
+      }
+
+      renderProducts(result);
+    }
+
+    // BAGIAN 19 — EVENT HANDLING
+
+    const searchInput = document.querySelector("#search-input");
+    searchInput.addEventListener("input", (e) => {
+      state.search = e.target.value;
+      render();
+    });
+
+    const categorySelect = document.querySelector("#category-select");
+    categorySelect.addEventListener("change", (e) => {
+      state.category = e.target.value;
+      render();
+    });
+
+    const sortSelect = document.querySelector("#sort-select");
+    sortSelect.addEventListener("change", (e) => {
+      state.sortBy = e.target.value;
+      render();
+    });
+
+    // render pertama kali saat halaman dibuka
+    render();
+  </script>
+</body>
+</html>
