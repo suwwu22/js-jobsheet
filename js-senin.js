@@ -553,4 +553,23 @@ const bigArray = Array.from({ length: 10000 }, (_, i) => i);
 console.log("\nLatihan 16.1 - Perbandingan jumlah langkah:");
 console.log("Linear search:", linearSearchCounted(bigArray, 9999));
 console.log("Binary search:", binarySearchCounted(bigArray, 9999));
+
+// BAGIAN 20 — MODERN JAVASCRIPT (ES6+)
  
+function getStatisticsV2(products) {
+  const prices = products.map(({ price }) => price);
+  const ratings = products.map(p => p.rating ?? 0);
+  const { length: totalProducts } = products;
+ 
+  return {
+    totalProducts,
+    averagePrice: prices.reduce((a, b) => a + b, 0) / prices.length,
+    highestPrice: Math.max(...prices),
+    lowestPrice: Math.min(...prices),
+    totalStock: products.reduce((sum, { stock }) => sum + stock, 0),
+    averageRating: ratings.reduce((a, b) => a + b, 0) / ratings.length
+  };
+}
+ 
+console.log("\nLatihan 20.1 - getStatistics versi ES6+:");
+console.log(getStatisticsV2(products));
