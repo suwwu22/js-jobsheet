@@ -462,4 +462,95 @@ search("laptop");
 search("phone");
 search("tablet");
 undoSearch(); // dari tablet, balik ke phone
-undoSearch(); // dari phone, balik ke laptopp
+undoSearch(); // dari phone, balik ke laptop
+
+// BAGIAN 14 — QUEUE (FIFO)
+ 
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+  enqueue(item) {
+    this.items.push(item);
+  }
+  dequeue() {
+    return this.items.shift();
+  }
+  peek() {
+    return this.items[0];
+  }
+  isEmpty() {
+    return this.items.length === 0;
+  }
+}
+ 
+console.log("\nLatihan 14.1 - Testing Queue:");
+const requestQueue = new Queue();
+requestQueue.enqueue("Request A");
+requestQueue.enqueue("Request B");
+requestQueue.enqueue("Request C");
+console.log("Peek:", requestQueue.peek());
+console.log("Dequeue:", requestQueue.dequeue());
+console.log("Peek setelah dequeue:", requestQueue.peek());
+ 
+ 
+// BAGIAN 15 — RECURSION
+ 
+const categories = [
+  {
+    name: "Electronics",
+    children: [
+      { name: "Laptop", children: [] },
+      { name: "Phone", children: [
+        { name: "Android", children: [] },
+        { name: "iOS", children: [] }
+      ] }
+    ]
+  },
+  { name: "Furniture", children: [] }
+];
+ 
+function printCategories(categories, depth = 0) {
+  for (const category of categories) {
+    console.log(" ".repeat(depth * 2) + category.name);
+    if (category.children.length > 0) {
+      printCategories(category.children, depth + 1);
+    }
+  }
+}
+ 
+console.log("\nLatihan 15.1 - Print categories rekursif:");
+printCategories(categories);
+ 
+ 
+// BAGIAN 16 — ALGORITHM COMPLEXITY
+ 
+function linearSearchCounted(array, target) {
+  let steps = 0;
+  for (let i = 0; i < array.length; i++) {
+    steps++;
+    if (array[i] === target) return { index: i, steps };
+  }
+  return { index: -1, steps };
+}
+ 
+function binarySearchCounted(arr, target) {
+  let steps = 0;
+  let left = 0;
+  let right = arr.length - 1;
+  while (left <= right) {
+    steps++;
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return { index: mid, steps };
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return { index: -1, steps };
+}
+ 
+const bigArray = Array.from({ length: 10000 }, (_, i) => i);
+ 
+console.log("\nLatihan 16.1 - Perbandingan jumlah langkah:");
+console.log("Linear search:", linearSearchCounted(bigArray, 9999));
+console.log("Binary search:", binarySearchCounted(bigArray, 9999));
+ 
