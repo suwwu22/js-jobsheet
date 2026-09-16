@@ -1,0 +1,35 @@
+const state = {
+  products: [],
+  status: "idle" // idle, loading, success, error
+};
+
+function render() {
+  console.log(`[status: ${state.status}]`, state.products.length, "produk dimuat");
+}
+
+async function getProducts() {
+  const response = await fetch("https://dummyjson.com/products?limit=5");
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+  const data = await response.json();
+  return data.products;
+}
+
+async function loadProducts() {
+  state.status = "loading";
+  render();
+
+  try {
+    const products = await getProducts();
+    state.products = products;
+    state.status = "success";
+  } catch (error) {
+    state.status = "error";
+    console.error("Gagal memuat produk:", error.message);
+  } finally {
+    render();
+  }
+}
+
+loadProducts();
